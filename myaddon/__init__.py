@@ -1,17 +1,13 @@
 # import the main window object (mw) from aqt
-import time
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QVBoxLayout
-
-import aqt
-from aqt import gui_hooks, mw
-from aqt.deckchooser import DeckChooser
 from anki.decks import DeckId
+from aqt import gui_hooks, mw
 from aqt.editor import Editor
 from aqt.operations.note import add_note
+from aqt.qt import *
 from aqt.sound import av_player
 from aqt.utils import showInfo, shortcut, tooltip, tr
-from aqt.qt import *
+
 
 # We're going to add a menu item below. First we want to create a function to
 # be called when the menu item is activated.
