@@ -17,7 +17,7 @@ class BrowserTab(QWebEngineView):
         self.editor = editor
         super().__init__(parent)
         self.loadFinished.connect(self.load_finished)
-        self.load(QUrl("https://duckduckgo.com"))
+        self.load(QUrl("file:///Users/gesa/repos/anki-addon/test.html"))
         self.copy_to_back_action = QAction("Copy to back of card", self)
         qconnect(self.copy_to_back_action.triggered, self.copy_to_back)
 
