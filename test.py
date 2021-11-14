@@ -3,7 +3,7 @@ from selenium import webdriver
 from aqt.main import AnkiQt
 
 def test_my_addon(anki_session: AnkiSession, monkeypatch):
-    def dummy_func(): pass
+    def dummy_func(*args, **kwargs): pass
     monkeypatch.setattr(AnkiQt, "handleImport", dummy_func)
 
     with anki_session.profile_loaded():
