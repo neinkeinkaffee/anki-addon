@@ -1,8 +1,6 @@
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtWidgets import QAction, QMenu, QDialog, QTabWidget, QHBoxLayout, QVBoxLayout, QDialogButtonBox, QShortcut
+from PyQt5.QtWidgets import QDialog, QTabWidget, QHBoxLayout, QVBoxLayout, QDialogButtonBox, QShortcut
 from anki.decks import DeckId
 from aqt import qconnect, mw, gui_hooks, tr
 from aqt.editor import Editor
@@ -10,31 +8,7 @@ from aqt.operations.note import add_note
 from aqt.sound import av_player
 from aqt.utils import shortcut, tooltip
 
-
-class BrowserTab(QWebEngineView):
-    def __init__(self, parent, editor):
-        self.parent = parent
-        self.editor = editor
-        super().__init__(parent)
-        self.loadFinished.connect(self.load_finished)
-        self.load(QUrl("file:///Users/gesa/repos/anki-addon/test.html"))
-        self.copy_to_back_action = QAction("Copy to back of card", self)
-        qconnect(self.copy_to_back_action.triggered, self.copy_to_back)
-
-    def copy_to_back(self):
-        note = mw.col.newNote()
-        note.fields[1] = self.selectedText()
-        self.editor.set_note(note, focusTo=0)
-
-    def load_finished(self, success):
-        print("Got here, load finished")
-        self.parent.setTabText(0, self.title())
-
-    def contextMenuEvent(self, event):
-        self.menu = QMenu()
-        if self.selectedText():
-            self.menu.addAction(self.copy_to_back_action)
-        self.menu.popup(event.globalPos())
+from myaddon.browser_tab import BrowserTab
 
 
 class MiniBrowser(QDialog):
