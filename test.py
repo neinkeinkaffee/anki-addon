@@ -16,7 +16,7 @@ def test_copy_text_to_back(anki_session: AnkiSession, monkeypatch):
             test_span = driver.find_element_by_xpath("//span[contains(text(), 'test')]")
             actionChains = ActionChains(driver)
             actionChains.double_click(test_span).perform()
-            browser_tab = anki_session.mw.findChild(myaddon.browser_tab.BrowserTab)
+            browser_tab = anki_session.mw.findChild(myaddon.browser.browser_tab.BrowserTab)
             browser_tab.copy_to_back_action.trigger()
             def selected_text_copied_to_back():
                 assert browser_tab.editor.note.fields[1] == "test"

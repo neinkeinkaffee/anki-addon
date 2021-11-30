@@ -8,16 +8,16 @@ from aqt.operations.note import add_note
 from aqt.sound import av_player
 from aqt.utils import shortcut, tooltip
 
-from myaddon.browser_tab import BrowserTab
+from .browser_tab import BrowserTab
 
 
-class MiniBrowser(QDialog):
-    def __init__(self):
+class Browser(QDialog):
+    def __init__(self, mw):
         self.mw = mw
         self.col = mw.col
         gui_hooks.editor_did_init.append(lambda x: print("Editor initialized"))
         parent = mw.app.activeWindow() or mw
-        super().__init__(parent) # create default constructor for QWidget
+        super().__init__(parent)
 
         addWidget = QtWidgets.QWidget(self)
         self.editor = Editor(self.mw, addWidget, self, True)
@@ -131,5 +131,5 @@ class MiniBrowser(QDialog):
 
 
 def show_mini_browser() -> None:
-    mini_browser = MiniBrowser()
+    mini_browser = Browser(mw)
     mini_browser.show()
