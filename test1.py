@@ -11,8 +11,6 @@ def test_browser(anki_session: AnkiSession, monkeypatch):
     prevent_import_window_from_opening(monkeypatch)
 
     with anki_session.profile_loaded():
-        myaddon = anki_session.load_addon(package_name="myaddon")
-
         browser = Browser(anki_session.mw)
         browser.show()
         anki_session.qtbot.addWidget(browser)
