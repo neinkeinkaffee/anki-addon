@@ -1,11 +1,8 @@
 from PyQt5 import QtCore
 from aqt.main import AnkiQt
 from pytest_anki import AnkiSession
-from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
 
 from myaddon.browser.embedded_browser import Browser
-
 
 def test_browser(anki_session: AnkiSession, monkeypatch):
     prevent_import_window_from_opening(monkeypatch)

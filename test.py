@@ -3,8 +3,6 @@ from pytest_anki import AnkiSession
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 
-
-
 def test_copy_text_to_back(anki_session: AnkiSession, monkeypatch):
     prevent_import_window_from_opening(monkeypatch)
 
