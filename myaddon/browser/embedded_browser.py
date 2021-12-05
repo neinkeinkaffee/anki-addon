@@ -19,8 +19,8 @@ class Browser(QDialog):
         parent = mw.app.activeWindow() or mw
         super().__init__(parent)
 
-        addWidget = QtWidgets.QWidget(self)
-        self.editor = Editor(self.mw, addWidget, self, True)
+        editorWidget = QtWidgets.QWidget(self)
+        self.editor = Editor(self.mw, editorWidget, self, True)
         self.editor.set_note(self.mw.col.newNote(), focusTo=0)
         self.defaults = self.col.defaults_for_adding(
             current_review_card=self.mw.reviewer.card
@@ -31,7 +31,7 @@ class Browser(QDialog):
         tabs.insertTab(0, tab, "New Tab")
 
         innerLayout = QHBoxLayout()
-        innerLayout.addWidget(addWidget)
+        innerLayout.addWidget(editorWidget)
         innerLayout.addWidget(tabs)
 
         outerLayout = QVBoxLayout()
