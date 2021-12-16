@@ -13,13 +13,21 @@ class BrowserDriver:
         self.monkeypatch = monkeypatch
         self.reader = PageReader()
 
-    def patch_qurl_to_return_local_file(self, test_resource_to_return):
-        local_qurl = QUrl.fromLocalFile(os.path.join(os.getcwd(), test_resource_to_return))
-        self.monkeypatch.setattr(QUrl, "fromUserInput", lambda x: local_qurl)
+    def patch_qurl_with_local_files(self, test_pages):
+        def serve_test_page(url):
+            return QUrl.fromLocalFile(os.path.join(os.getcwd(), test_pages[url]))
+        self.monkeypatch.setattr(QUrl, "fromUserInput", serve_test_page)
 
     def enter_address_and_hit_return(self, text):
+        self.browser.address.clear()
         self.qtbot.keyClicks(self.browser.address, text)
         self.qtbot.keyClick(self.browser.address, Qt.Key_Return)
+
+    def click_backwards_button(self):
+        self.qtbot.mouseClick(self.browser.backBtn, Qt.MouseButton.LeftButton)
+
+    def click_forwards_button(self):
+        self.qtbot.mouseClick(self.browser.forBtn, Qt.MouseButton.LeftButton)
 
     def assert_browser_window_title(self, expected_title):
         self.qtbot.waitUntil(lambda: self.browser.windowTitle() == expected_title)
