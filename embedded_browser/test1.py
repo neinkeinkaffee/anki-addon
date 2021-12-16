@@ -2,7 +2,7 @@ from PyQt5 import QtCore
 from aqt.main import AnkiQt
 from pytest_anki import AnkiSession
 
-from myaddon.browser.embedded_browser import Browser
+from spikes.testaddon import Browser
 
 def test_browser(anki_session: AnkiSession, monkeypatch):
     prevent_import_window_from_opening(monkeypatch)

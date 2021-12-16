@@ -31,12 +31,12 @@ class BrowserDriver:
 
 
 class PageReader(QObject):
-    store_html_finished = pyqtSignal()
+    finished_storing_html = pyqtSignal()
     stored_html = ""
 
     def store_html(self, html):
         self.stored_html = html
-        self.store_html_finished.emit()
+        self.finished_storing_html.emit()
 
     def loop_until_signal_emitted(self, signal):
         loop = QEventLoop()
@@ -45,5 +45,5 @@ class PageReader(QObject):
 
     def read_html(self, page):
         page.toHtml(self.store_html)
-        self.loop_until_signal_emitted(self.store_html_finished)
+        self.loop_until_signal_emitted(self.finished_storing_html)
         return self.stored_html
