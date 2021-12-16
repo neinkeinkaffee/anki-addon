@@ -17,13 +17,13 @@ class Browser(QMainWindow):
 
         self.backBtn = QPushButton(self)
         self.backBtn.setEnabled(False)
-        self.backBtn.setIcon(QIcon(':/qt-project.org/styles/commonstyle/images/left-32.png'))
+        self.backBtn.setIcon(QIcon(":/qt-project.org/styles/commonstyle/images/left-32.png"))
         self.backBtn.clicked.connect(self.back)
         self.toolBar.addWidget(self.backBtn)
 
         self.forBtn = QPushButton(self)
         self.forBtn.setEnabled(False)
-        self.forBtn.setIcon(QIcon(':/qt-project.org/styles/commonstyle/images/right-32.png'))
+        self.forBtn.setIcon(QIcon(":/qt-project.org/styles/commonstyle/images/right-32.png"))
         self.forBtn.clicked.connect(self.forward)
         self.toolBar.addWidget(self.forBtn)
 
@@ -38,7 +38,7 @@ class Browser(QMainWindow):
         self.webEngineView.page().urlChanged.connect(self.urlChanged)
 
         self.setGeometry(300, 300, 500, 400)
-        self.setWindowTitle('QWebEnginePage')
+        self.setWindowTitle("QWebEnginePage")
         self.show()
 
     def onLoadFinished(self):
@@ -73,5 +73,5 @@ def main():
     sys.exit(app.exec_())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
