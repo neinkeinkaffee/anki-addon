@@ -8,7 +8,6 @@ from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 class Browser(QMainWindow):
     def __init__(self):
         super(Browser, self).__init__()
-
         self.initUI()
 
     def initUI(self):
@@ -32,25 +31,18 @@ class Browser(QMainWindow):
         self.toolBar.addWidget(self.address)
 
         self.webEngineView = QWebEngineView(self)
-        self.setCentralWidget(self.webEngineView)
         self.webEngineView.page().urlChanged.connect(self.onLoadFinished)
         self.webEngineView.page().titleChanged.connect(self.setWindowTitle)
         self.webEngineView.page().urlChanged.connect(self.urlChanged)
+        self.setCentralWidget(self.webEngineView)
 
         self.setGeometry(300, 300, 500, 400)
         self.setWindowTitle("QWebEnginePage")
         self.show()
 
     def onLoadFinished(self):
-        if self.webEngineView.history().canGoBack():
-            self.backBtn.setEnabled(True)
-        else:
-            self.backBtn.setEnabled(False)
-
-        if self.webEngineView.history().canGoForward():
-            self.forBtn.setEnabled(True)
-        else:
-            self.forBtn.setEnabled(False)
+        self.backBtn.setEnabled(self.webEngineView.history().canGoBack())
+        self.forBtn.setEnabled(self.webEngineView.history().canGoForward())
 
     def load(self):
         url = QUrl.fromUserInput(self.address.text())
