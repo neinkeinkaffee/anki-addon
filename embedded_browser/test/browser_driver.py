@@ -3,7 +3,7 @@ import os
 from PyQt5.QtCore import QEventLoop, Qt, QObject, pyqtSignal, QUrl
 from embedded_browser.browser.browser import Browser
 
-TEST_RESOURCES_DIR = "embedded_browser/test/fixtures"
+TEST_FIXTURES_DIR = "embedded_browser/test/fixtures"
 
 class BrowserDriver:
     def __init__(self, qtbot, monkeypatch):
@@ -13,24 +13,19 @@ class BrowserDriver:
         self._reader = PageReader()
         qtbot.addWidget(self._browser)
 
-    def patch_qurl_with_local_files(self, test_pages):
-        def serve_test_page(url):
-            return QUrl.fromLocalFile(os.path.join(os.getcwd(), TEST_RESOURCES_DIR, test_pages[url]))
-        self._monkeypatch.setattr(QUrl, "fromUserInput", serve_test_page)
-
     def enter_address_and_hit_return(self, text):
-        self._browser.address.clear()
-        self._qtbot.keyClicks(self._browser.address, text)
-        self._qtbot.keyClick(self._browser.address, Qt.Key_Return)
-        # Would be better to waitForSignal(self._browser.tabs.currentWidget().loadFinished) but that doesn't get emitted
-        length_browser_history_before = self._browser.tabs.currentWidget().history().count()
-        self._qtbot.waitUntil(lambda: self._browser.tabs.currentWidget().history().count() > length_browser_history_before)
+        with self._qtbot.waitSignal(self._browser.tabs.currentWidget().titleChanged):
+            self._browser.address.clear()
+            self._qtbot.keyClicks(self._browser.address, text)
+            self._qtbot.keyClick(self._browser.address, Qt.Key_Return)
 
     def click_backward_button(self):
-        self._qtbot.mouseClick(self._browser.backBtn, Qt.MouseButton.LeftButton)
+        with self._qtbot.waitSignal(self._browser.address.textChanged):
+            self._qtbot.mouseClick(self._browser.backBtn, Qt.MouseButton.LeftButton)
 
     def click_forward_button(self):
-        self._qtbot.mouseClick(self._browser.forBtn, Qt.MouseButton.LeftButton)
+        with self._qtbot.waitSignal(self._browser.address.textChanged):
+            self._qtbot.mouseClick(self._browser.forBtn, Qt.MouseButton.LeftButton)
 
     def open_new_tab(self):
         self._qtbot.keyClicks(self._browser.tabs, "T", Qt.ControlModifier)
@@ -53,7 +48,7 @@ class BrowserDriver:
         assert not self._browser.backBtn.isEnabled()
 
     def assert_backward_button_enabled(self):
-        assert self._browser.backBtn.isEnabled()
+        self._qtbot.waitUntil(lambda: self._browser.backBtn.isEnabled())
 
 
 class PageReader(QObject):
