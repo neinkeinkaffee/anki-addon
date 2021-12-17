@@ -74,7 +74,8 @@ class Browser(QMainWindow):
         self.address.setText(url.toString())
 
     def current_tab_changed(self, i):
-        pass
+        qurl = self.tabs.currentWidget().url()
+        self.update_address_bar(qurl, self.tabs.currentWidget())
 
     def close_current_tab(self, i):
         if self.tabs.count() < 2:
@@ -84,6 +85,7 @@ class Browser(QMainWindow):
     def update_address_bar(self, qurl, browser_tab):
         self.address.setText(qurl.toString())
         self.address.setCursorPosition(0)
+
 
 def main():
     app = QApplication(sys.argv)

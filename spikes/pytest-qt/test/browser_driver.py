@@ -7,38 +7,44 @@ TEST_RESOURCES_DIR = "spikes/pytest-qt/test/fixtures"
 
 class BrowserDriver:
     def __init__(self, qtbot, monkeypatch):
-        self.qtbot = qtbot
-        self.monkeypatch = monkeypatch
-        self.browser = Browser()
-        qtbot.addWidget(self.browser)
-        self.reader = PageReader()
+        self._qtbot = qtbot
+        self._monkeypatch = monkeypatch
+        self._browser = Browser()
+        self._reader = PageReader()
+        qtbot.addWidget(self._browser)
 
     def patch_qurl_with_local_files(self, test_pages):
         def serve_test_page(url):
             return QUrl.fromLocalFile(os.path.join(os.getcwd(), TEST_RESOURCES_DIR, test_pages[url]))
-        self.monkeypatch.setattr(QUrl, "fromUserInput", serve_test_page)
+        self._monkeypatch.setattr(QUrl, "fromUserInput", serve_test_page)
 
     def enter_address_and_hit_return(self, text):
-        self.browser.address.clear()
-        self.qtbot.keyClicks(self.browser.address, text)
-        self.qtbot.keyClick(self.browser.address, Qt.Key_Return)
+        self._browser.address.clear()
+        self._qtbot.keyClicks(self._browser.address, text)
+        self._qtbot.keyClick(self._browser.address, Qt.Key_Return)
 
     def click_backward_button(self):
-        self.qtbot.mouseClick(self.browser.backBtn, Qt.MouseButton.LeftButton)
+        self._qtbot.mouseClick(self._browser.backBtn, Qt.MouseButton.LeftButton)
 
     def click_forward_button(self):
-        self.qtbot.mouseClick(self.browser.forBtn, Qt.MouseButton.LeftButton)
+        self._qtbot.mouseClick(self._browser.forBtn, Qt.MouseButton.LeftButton)
 
     def open_new_tab(self):
-        self.qtbot.keyClicks(self.browser.tabs, "T", Qt.ControlModifier)
+        self._qtbot.keyClicks(self._browser.tabs, "T", Qt.ControlModifier)
 
-    def assert_browser_window_title(self, expected_title):
-        self.qtbot.waitUntil(lambda: self.browser.tabs.currentWidget().title() == expected_title)
+    def assert_active_browser_tab_title(self, expected_title):
+        self._qtbot.waitUntil(lambda: self._browser.tabs.currentWidget().title() == expected_title)
 
-    def assert_page_contains(self, expected_text):
-        browser_page = self.browser.tabs.currentWidget().page()
-        html_content = self.reader.read_html(browser_page)
+    def assert_active_browser_tab_contains_html(self, expected_text):
+        browser_page = self._browser.tabs.currentWidget().page()
+        html_content = self._reader.read_html(browser_page)
         assert expected_text in html_content
+
+    def assert_tab_count(self, expected_count):
+        assert self._browser.tabs.count() == expected_count
+
+    def assert_address_bar_contains(self, expected_string):
+        assert expected_string in self._browser.address.text()
 
 
 class PageReader(QObject):
