@@ -1,9 +1,9 @@
 import os
 
 from PyQt5.QtCore import QEventLoop, Qt, QObject, pyqtSignal, QUrl
-from browser import Browser
+from embedded_browser.browser.browser import Browser
 
-TEST_RESOURCES_DIR = "spikes/pytest-qt/test/fixtures"
+TEST_RESOURCES_DIR = "embedded_browser/test/fixtures"
 
 class BrowserDriver:
     def __init__(self, qtbot, monkeypatch):
