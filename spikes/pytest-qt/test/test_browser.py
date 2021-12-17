@@ -1,11 +1,11 @@
-from browser_driver import BrowserDriver
+from .browser_driver import BrowserDriver
 
 
 def test_loads_page_and_navigates_back_and_forth(qtbot, monkeypatch):
     browser_driver = BrowserDriver(qtbot, monkeypatch)
     browser_driver.patch_qurl_with_local_files({
-        "www.sometest.com": "spikes/pytest-qt/test.html",
-        "www.anothertest.com": "spikes/pytest-qt/test_page_2.html"
+        "www.sometest.com": "test_page_1.html",
+        "www.anothertest.com": "test_page_2.html"
     })
 
     browser_driver.enter_address_and_hit_return("www.sometest.com")

@@ -4,6 +4,7 @@ from PyQt5.QtCore import QEventLoop, Qt, QObject, pyqtSignal, QUrl
 
 from browser import Browser
 
+TEST_RESOURCES_DIR = "spikes/pytest-qt/test/fixtures"
 
 class BrowserDriver:
     def __init__(self, qtbot, monkeypatch):
@@ -15,7 +16,7 @@ class BrowserDriver:
 
     def patch_qurl_with_local_files(self, test_pages):
         def serve_test_page(url):
-            return QUrl.fromLocalFile(os.path.join(os.getcwd(), test_pages[url]))
+            return QUrl.fromLocalFile(os.path.join(os.getcwd(), TEST_RESOURCES_DIR, test_pages[url]))
         self.monkeypatch.setattr(QUrl, "fromUserInput", serve_test_page)
 
     def enter_address_and_hit_return(self, text):
