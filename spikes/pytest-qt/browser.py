@@ -1,8 +1,9 @@
 import sys
+
 from PyQt5.QtCore import QUrl
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import (QApplication, QLineEdit, QMainWindow, QPushButton, QToolBar)
+from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
+from PyQt5.QtWidgets import (QApplication, QLineEdit, QMainWindow, QPushButton, QToolBar, QTabWidget, QShortcut)
 
 
 class Browser(QMainWindow):
@@ -30,34 +31,59 @@ class Browser(QMainWindow):
         self.address.returnPressed.connect(self.load)
         self.toolBar.addWidget(self.address)
 
-        self.webEngineView = QWebEngineView(self)
-        self.webEngineView.page().urlChanged.connect(self.onLoadFinished)
-        self.webEngineView.page().titleChanged.connect(self.setWindowTitle)
-        self.webEngineView.page().urlChanged.connect(self.urlChanged)
-        self.setCentralWidget(self.webEngineView)
+        self.tabs = QTabWidget()
+        self.tabs.setDocumentMode(True)
+        self.tabs.setTabsClosable(True)
+        QShortcut(QKeySequence("Ctrl+T"), self, self.add_new_tab)
+        self.tabs.currentChanged.connect(self.current_tab_changed)
+        self.tabs.tabCloseRequested.connect(self.close_current_tab)
+        self.setCentralWidget(self.tabs)
+
+        self.add_new_tab(QUrl("https://duckduckgo.com"), "Home")
 
         self.setGeometry(300, 300, 500, 400)
         self.setWindowTitle("QWebEnginePage")
         self.show()
 
-    def onLoadFinished(self):
-        self.backBtn.setEnabled(self.webEngineView.history().canGoBack())
-        self.forBtn.setEnabled(self.webEngineView.history().canGoForward())
-
     def load(self):
         url = QUrl.fromUserInput(self.address.text())
-        if url.isValid():
-            self.webEngineView.load(url)
+        self.tabs.currentWidget().setUrl(url)
 
     def back(self):
-        self.webEngineView.page().triggerAction(QWebEnginePage.Back)
+        self.tabs.currentWidget().page().triggerAction(QWebEnginePage.Back)
 
     def forward(self):
-        self.webEngineView.page().triggerAction(QWebEnginePage.Forward)
+        self.tabs.currentWidget().page().triggerAction(QWebEnginePage.Forward)
 
-    def urlChanged(self, url):
+    def add_new_tab(self, qurl = None, label = "Blank"):
+        if qurl is None:
+            qurl = QUrl.fromUserInput("https://duckduckgo.com")
+        browser_tab = QWebEngineView()
+        browser_tab.setUrl(qurl)
+        i = self.tabs.addTab(browser_tab, label)
+        self.tabs.setCurrentIndex(i)
+        browser_tab.urlChanged.connect(lambda qurl, browser_tab = browser_tab: self.update_address_bar(qurl, browser_tab))
+        browser_tab.loadFinished.connect(lambda _, i = i, browser_tab = browser_tab: self.on_load_finished(i, browser_tab))
+
+    def on_load_finished(self, i, browser_tab):
+        self.tabs.setTabText(i, browser_tab.page().title())
+        self.backBtn.setEnabled(self.tabs.currentWidget().history().canGoBack())
+        self.forBtn.setEnabled(self.tabs.currentWidget().history().canGoForward())
+
+    def url_changed(self, url):
         self.address.setText(url.toString())
 
+    def current_tab_changed(self, i):
+        pass
+
+    def close_current_tab(self, i):
+        if self.tabs.count() < 2:
+            return
+        self.tabs.removeTab(i)
+
+    def update_address_bar(self, qurl, browser_tab):
+        self.address.setText(qurl.toString())
+        self.address.setCursorPosition(0)
 
 def main():
     app = QApplication(sys.argv)

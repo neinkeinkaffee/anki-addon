@@ -16,13 +16,25 @@ def test_loads_page_and_navigates_back_and_forth(qtbot, monkeypatch):
     browser_driver.assert_browser_window_title("Another Test Page")
     browser_driver.assert_page_contains("This is another test")
 
-    browser_driver.click_backwards_button()
+    browser_driver.click_backward_button()
     browser_driver.assert_browser_window_title("Test Page")
     browser_driver.assert_page_contains("This is a test")
 
-    browser_driver.click_forwards_button()
+    browser_driver.click_forward_button()
     browser_driver.assert_browser_window_title("Another Test Page")
     browser_driver.assert_page_contains("This is another test")
+
+
+def test_opens_new_tab_with_duckduckgo_as_default_page(qtbot, monkeypatch):
+    browser_driver = BrowserDriver(qtbot, monkeypatch)
+    browser_driver.patch_qurl_with_local_files({
+        "https://duckduckgo.com": "test_page_1.html",
+    })
+
+    browser_driver.open_new_tab()
+
+    browser_driver.assert_browser_window_title("Test Page")
+    browser_driver.assert_page_contains("This is a test")
 
 
 

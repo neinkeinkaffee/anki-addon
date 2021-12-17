@@ -1,17 +1,16 @@
 import os
 
 from PyQt5.QtCore import QEventLoop, Qt, QObject, pyqtSignal, QUrl
-
 from browser import Browser
 
 TEST_RESOURCES_DIR = "spikes/pytest-qt/test/fixtures"
 
 class BrowserDriver:
     def __init__(self, qtbot, monkeypatch):
-        self.browser = Browser()
-        qtbot.addWidget(self.browser)
         self.qtbot = qtbot
         self.monkeypatch = monkeypatch
+        self.browser = Browser()
+        qtbot.addWidget(self.browser)
         self.reader = PageReader()
 
     def patch_qurl_with_local_files(self, test_pages):
@@ -24,17 +23,20 @@ class BrowserDriver:
         self.qtbot.keyClicks(self.browser.address, text)
         self.qtbot.keyClick(self.browser.address, Qt.Key_Return)
 
-    def click_backwards_button(self):
+    def click_backward_button(self):
         self.qtbot.mouseClick(self.browser.backBtn, Qt.MouseButton.LeftButton)
 
-    def click_forwards_button(self):
+    def click_forward_button(self):
         self.qtbot.mouseClick(self.browser.forBtn, Qt.MouseButton.LeftButton)
 
+    def open_new_tab(self):
+        self.qtbot.keyClicks(self.browser.tabs, "T", Qt.ControlModifier)
+
     def assert_browser_window_title(self, expected_title):
-        self.qtbot.waitUntil(lambda: self.browser.windowTitle() == expected_title)
+        self.qtbot.waitUntil(lambda: self.browser.tabs.currentWidget().title() == expected_title)
 
     def assert_page_contains(self, expected_text):
-        browser_page = self.browser.webEngineView.page()
+        browser_page = self.browser.tabs.currentWidget().page()
         html_content = self.reader.read_html(browser_page)
         assert expected_text in html_content
 
