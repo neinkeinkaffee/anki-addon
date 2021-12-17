@@ -21,9 +21,9 @@ class BrowserDriver:
     def enter_address_and_hit_return(self, text):
         self._browser.address.clear()
         self._qtbot.keyClicks(self._browser.address, text)
-        length_browser_history_before = self._browser.tabs.currentWidget().history().count()
         self._qtbot.keyClick(self._browser.address, Qt.Key_Return)
         # Would be better to waitForSignal(self._browser.tabs.currentWidget().loadFinished) but that doesn't get emitted
+        length_browser_history_before = self._browser.tabs.currentWidget().history().count()
         self._qtbot.waitUntil(lambda: self._browser.tabs.currentWidget().history().count() > length_browser_history_before)
 
     def click_backward_button(self):
