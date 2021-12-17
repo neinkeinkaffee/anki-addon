@@ -57,7 +57,7 @@ class Browser(QMainWindow):
 
     def add_new_tab(self, qurl = None, label = "Blank"):
         if qurl is None:
-            qurl = QUrl.fromUserInput("https://duckduckgo.com")
+            qurl = QUrl.fromUserInput("about:blank")
         browser_tab = QWebEngineView()
         i = self.tabs.addTab(browser_tab, label)
         self.tabs.setCurrentIndex(i)
