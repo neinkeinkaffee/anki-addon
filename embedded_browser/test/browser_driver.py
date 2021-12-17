@@ -21,7 +21,10 @@ class BrowserDriver:
     def enter_address_and_hit_return(self, text):
         self._browser.address.clear()
         self._qtbot.keyClicks(self._browser.address, text)
+        length_browser_history_before = self._browser.tabs.currentWidget().history().count()
         self._qtbot.keyClick(self._browser.address, Qt.Key_Return)
+        # Would be better to waitForSignal(self._browser.tabs.currentWidget().loadFinished) but that doesn't get emitted
+        self._qtbot.waitUntil(lambda: self._browser.tabs.currentWidget().history().count() > length_browser_history_before)
 
     def click_backward_button(self):
         self._qtbot.mouseClick(self._browser.backBtn, Qt.MouseButton.LeftButton)
@@ -45,6 +48,12 @@ class BrowserDriver:
 
     def assert_address_bar_contains(self, expected_string):
         assert expected_string in self._browser.address.text()
+
+    def assert_backward_button_disabled(self):
+        assert not self._browser.backBtn.isEnabled()
+
+    def assert_backward_button_enabled(self):
+        assert self._browser.backBtn.isEnabled()
 
 
 class PageReader(QObject):

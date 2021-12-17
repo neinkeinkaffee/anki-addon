@@ -59,15 +59,16 @@ class Browser(QMainWindow):
         if qurl is None:
             qurl = QUrl.fromUserInput("https://duckduckgo.com")
         browser_tab = QWebEngineView()
-        browser_tab.setUrl(qurl)
         i = self.tabs.addTab(browser_tab, label)
         self.tabs.setCurrentIndex(i)
         browser_tab.urlChanged.connect(lambda qurl, browser_tab = browser_tab: self.update_address_bar(qurl, browser_tab))
         browser_tab.loadFinished.connect(lambda _, i = i, browser_tab = browser_tab: self.on_load_finished(i, browser_tab))
+        browser_tab.setUrl(qurl)
 
     def on_load_finished(self, i, browser_tab):
         self.tabs.setTabText(i, browser_tab.page().title())
         self.backBtn.setEnabled(self.tabs.currentWidget().history().canGoBack())
+        print("ENABLED is ", self.backBtn.isEnabled())
         self.forBtn.setEnabled(self.tabs.currentWidget().history().canGoForward())
 
     def url_changed(self, url):
