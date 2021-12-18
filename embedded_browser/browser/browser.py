@@ -39,7 +39,7 @@ class Browser(QMainWindow):
         self.tabs.tabCloseRequested.connect(self.close_current_tab)
         self.setCentralWidget(self.tabs)
 
-        self.add_new_tab(QUrl("https://duckduckgo.com"), "Home")
+        self.add_new_tab(QUrl("https://duckduckgo.com"))
 
         self.setGeometry(300, 300, 500, 400)
         self.setWindowTitle("QWebEnginePage")
@@ -67,6 +67,9 @@ class Browser(QMainWindow):
 
     def on_load_finished(self, i, browser_tab):
         self.tabs.setTabText(i, browser_tab.page().title())
+        self.toggle_browser_history_buttons()
+
+    def toggle_browser_history_buttons(self):
         self.backBtn.setEnabled(self.tabs.currentWidget().history().canGoBack())
         self.forBtn.setEnabled(self.tabs.currentWidget().history().canGoForward())
 
@@ -76,8 +79,7 @@ class Browser(QMainWindow):
     def current_tab_changed(self, i):
         qurl = self.tabs.currentWidget().url()
         self.update_address_bar(qurl, self.tabs.currentWidget())
-        self.backBtn.setEnabled(self.tabs.currentWidget().history().canGoBack())
-        self.forBtn.setEnabled(self.tabs.currentWidget().history().canGoForward())
+        self.toggle_browser_history_buttons()
 
     def close_current_tab(self, i):
         if self.tabs.count() < 2:
@@ -85,6 +87,8 @@ class Browser(QMainWindow):
         self.tabs.removeTab(i)
 
     def update_address_bar(self, qurl, browser_tab):
+        if browser_tab != self.tabs.currentWidget():
+            return
         self.address.setText(qurl.toString())
         self.address.setCursorPosition(0)
 

@@ -14,7 +14,7 @@ class BrowserDriver:
         qtbot.addWidget(self._browser)
 
     def enter_address_and_hit_return(self, text):
-        with self._qtbot.waitSignal(self._browser.tabs.currentWidget().titleChanged):
+        with self._qtbot.waitSignal(self._browser.tabs.currentWidget().loadFinished):
             self._browser.address.clear()
             self._qtbot.keyClicks(self._browser.address, text)
             self._qtbot.keyClick(self._browser.address, Qt.Key_Return)
