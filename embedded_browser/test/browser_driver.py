@@ -30,6 +30,10 @@ class BrowserDriver:
     def open_new_tab(self):
         self._qtbot.keyClicks(self._browser.tabs, "T", Qt.ControlModifier)
 
+    def switch_to_tab(self, index):
+        with self._qtbot.waitSignal(self._browser.tabs.currentChanged):
+            self._browser.tabs.setCurrentIndex(index)
+
     def assert_active_browser_tab_title(self, expected_title):
         self._qtbot.waitUntil(lambda: self._browser.tabs.currentWidget().title() == expected_title)
 
@@ -49,6 +53,12 @@ class BrowserDriver:
 
     def assert_backward_button_enabled(self):
         self._qtbot.waitUntil(lambda: self._browser.backBtn.isEnabled())
+
+    def assert_forward_button_disabled(self):
+        assert not self._browser.forBtn.isEnabled()
+
+    def assert_forward_button_enabled(self):
+        self._qtbot.waitUntil(lambda: self._browser.forBtn.isEnabled())
 
 
 class PageReader(QObject):

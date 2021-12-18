@@ -68,7 +68,6 @@ class Browser(QMainWindow):
     def on_load_finished(self, i, browser_tab):
         self.tabs.setTabText(i, browser_tab.page().title())
         self.backBtn.setEnabled(self.tabs.currentWidget().history().canGoBack())
-        print("ENABLED is ", self.backBtn.isEnabled())
         self.forBtn.setEnabled(self.tabs.currentWidget().history().canGoForward())
 
     def url_changed(self, url):
@@ -77,6 +76,8 @@ class Browser(QMainWindow):
     def current_tab_changed(self, i):
         qurl = self.tabs.currentWidget().url()
         self.update_address_bar(qurl, self.tabs.currentWidget())
+        self.backBtn.setEnabled(self.tabs.currentWidget().history().canGoBack())
+        self.forBtn.setEnabled(self.tabs.currentWidget().history().canGoForward())
 
     def close_current_tab(self, i):
         if self.tabs.count() < 2:

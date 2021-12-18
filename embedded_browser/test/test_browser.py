@@ -41,7 +41,16 @@ def test_backward_and_forward_buttons_are_tab_sensitive(qtbot, monkeypatch):
     browser_driver = BrowserDriver(qtbot, monkeypatch)
     browser_driver.assert_backward_button_disabled()
 
+    browser_driver.open_new_tab()
     browser_driver.enter_address_and_hit_return(f"{FIXTURES_DIR}/page_1.html")
     browser_driver.enter_address_and_hit_return(f"{FIXTURES_DIR}/page_2.html")
-
     browser_driver.assert_backward_button_enabled()
+    browser_driver.switch_to_tab(0)
+    browser_driver.assert_backward_button_disabled()
+
+    browser_driver.switch_to_tab(1)
+    browser_driver.click_backward_button()
+    browser_driver.assert_forward_button_enabled()
+    browser_driver.switch_to_tab(0)
+    browser_driver.assert_forward_button_disabled()
+
