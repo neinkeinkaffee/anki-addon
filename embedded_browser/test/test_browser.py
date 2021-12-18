@@ -27,7 +27,7 @@ def test_loads_page_and_navigates_back_and_forth(qtbot, monkeypatch):
     browser_driver.assert_active_browser_tab_title("Another Test Page")
 
 
-def test_opens_new_tab_with_duckduckgo_as_default_page(qtbot, monkeypatch):
+def test_opens_new_tab_with_blank_default_page(qtbot, monkeypatch):
     browser_driver = BrowserDriver(qtbot, monkeypatch)
 
     browser_driver.open_new_tab()

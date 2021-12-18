@@ -28,7 +28,8 @@ class BrowserDriver:
             self._qtbot.mouseClick(self._browser.forBtn, Qt.MouseButton.LeftButton)
 
     def open_new_tab(self):
-        self._qtbot.keyClicks(self._browser.tabs, "T", Qt.ControlModifier)
+        with self._qtbot.waitSignal(self._browser.tabs.currentWidget().loadFinished):
+            self._qtbot.keyClicks(self._browser.tabs, "T", Qt.ControlModifier)
 
     def switch_to_tab(self, index):
         with self._qtbot.waitSignal(self._browser.tabs.currentChanged):
