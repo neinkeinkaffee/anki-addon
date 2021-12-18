@@ -35,6 +35,9 @@ class BrowserDriver:
         with self._qtbot.waitSignal(self._browser.tabs.currentChanged):
             self._browser.tabs.setCurrentIndex(index)
 
+    def close_active_tab(self):
+        self._qtbot.keyClicks(self._browser.tabs, "W", Qt.ControlModifier)
+
     def assert_active_browser_tab_title(self, expected_title):
         self._qtbot.waitUntil(lambda: self._browser.tabs.currentWidget().title() == expected_title)
 

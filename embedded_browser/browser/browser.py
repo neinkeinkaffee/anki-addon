@@ -35,8 +35,9 @@ class Browser(QMainWindow):
         self.tabs.setDocumentMode(True)
         self.tabs.setTabsClosable(True)
         QShortcut(QKeySequence("Ctrl+T"), self, self.add_new_tab)
+        QShortcut(QKeySequence("Ctrl+W"), self, self.close_active_tab)
         self.tabs.currentChanged.connect(self.current_tab_changed)
-        self.tabs.tabCloseRequested.connect(self.close_current_tab)
+        self.tabs.tabCloseRequested.connect(self.close_tab)
         self.setCentralWidget(self.tabs)
 
         self.add_new_tab(QUrl("https://duckduckgo.com"))
@@ -65,6 +66,14 @@ class Browser(QMainWindow):
         browser_tab.loadFinished.connect(lambda _, i = i, browser_tab = browser_tab: self.on_load_finished(i, browser_tab))
         browser_tab.setUrl(qurl)
 
+    def close_active_tab(self):
+        self.close_tab(self.tabs.currentIndex())
+
+    def close_tab(self, i):
+        if self.tabs.count() < 2:
+            return
+        self.tabs.removeTab(i)
+
     def on_load_finished(self, i, browser_tab):
         self.tabs.setTabText(i, browser_tab.page().title())
         self.toggle_browser_history_buttons()
@@ -80,11 +89,6 @@ class Browser(QMainWindow):
         qurl = self.tabs.currentWidget().url()
         self.update_address_bar(qurl, self.tabs.currentWidget())
         self.toggle_browser_history_buttons()
-
-    def close_current_tab(self, i):
-        if self.tabs.count() < 2:
-            return
-        self.tabs.removeTab(i)
 
     def update_address_bar(self, qurl, browser_tab):
         if browser_tab != self.tabs.currentWidget():

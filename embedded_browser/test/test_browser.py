@@ -54,3 +54,14 @@ def test_backward_and_forward_buttons_are_tab_sensitive(qtbot, monkeypatch):
     browser_driver.switch_to_tab(0)
     browser_driver.assert_forward_button_disabled()
 
+def test_closes_tab(qtbot, monkeypatch):
+    browser_driver = BrowserDriver(qtbot, monkeypatch)
+
+    browser_driver.open_new_tab()
+    browser_driver.assert_tab_count(2)
+
+    browser_driver.close_active_tab()
+    browser_driver.assert_tab_count(1)
+
+    browser_driver.close_active_tab()
+    browser_driver.assert_tab_count(1)
