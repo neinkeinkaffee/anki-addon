@@ -6,6 +6,16 @@ from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from PyQt5.QtWidgets import (QApplication, QLineEdit, QMainWindow, QPushButton, QToolBar, QTabWidget, QShortcut)
 
 
+WINDOW_DIMENSIONS = (300, 300, 500, 400)
+BACK_ARROW_URI = ":/qt-project.org/styles/commonstyle/images/left-32.png"
+FORWARD_ARROW_URI = ":/qt-project.org/styles/commonstyle/images/right-32.png"
+FIRST_TAB_DEFAULT_URL = "https://duckduckgo.com"
+NEW_TABS_DEFAULT_URL = "about:blank"
+WINDOW_TITLE = "Browser"
+CLOSE_TAB_KEY_SEQUENCE = "Ctrl+W"
+OPEN_TAB_KEY_SEQUENCE = "Ctrl+T"
+
+
 class Browser(QMainWindow):
     def __init__(self, create_card_callback=None):
         super(Browser, self).__init__()
@@ -18,38 +28,38 @@ class Browser(QMainWindow):
 
         self.backBtn = QPushButton(self)
         self.backBtn.setEnabled(False)
-        self.backBtn.setIcon(QIcon(":/qt-project.org/styles/commonstyle/images/left-32.png"))
+        self.backBtn.setIcon(QIcon(BACK_ARROW_URI))
         self.backBtn.clicked.connect(self.back)
         self.toolBar.addWidget(self.backBtn)
 
         self.forBtn = QPushButton(self)
         self.forBtn.setEnabled(False)
-        self.forBtn.setIcon(QIcon(":/qt-project.org/styles/commonstyle/images/right-32.png"))
+        self.forBtn.setIcon(QIcon(FORWARD_ARROW_URI))
         self.forBtn.clicked.connect(self.forward)
         self.toolBar.addWidget(self.forBtn)
 
-        self.address = QLineEdit(self)
-        self.address.returnPressed.connect(self.load)
-        self.toolBar.addWidget(self.address)
+        self.address_bar = QLineEdit(self)
+        self.address_bar.returnPressed.connect(self.load)
+        self.toolBar.addWidget(self.address_bar)
 
         self.tabs = QTabWidget()
         self.tabs.setDocumentMode(True)
         self.tabs.setTabsClosable(True)
-        QShortcut(QKeySequence("Ctrl+T"), self, self.add_new_tab)
-        QShortcut(QKeySequence("Ctrl+W"), self, self.close_active_tab)
+        QShortcut(QKeySequence(OPEN_TAB_KEY_SEQUENCE), self, self.add_new_tab)
+        QShortcut(QKeySequence(CLOSE_TAB_KEY_SEQUENCE), self, self.close_active_tab)
         QShortcut(QKeySequence(Qt.Key_Enter + Qt.AltModifier), self, self.call_create_card_callback)
         self.tabs.currentChanged.connect(self.current_tab_changed)
         self.tabs.tabCloseRequested.connect(self.close_tab)
         self.setCentralWidget(self.tabs)
 
-        self.add_new_tab(QUrl("https://duckduckgo.com"))
+        self.add_new_tab(QUrl(FIRST_TAB_DEFAULT_URL))
 
-        self.setGeometry(300, 300, 500, 400)
-        self.setWindowTitle("QWebEnginePage")
+        self.setGeometry(*WINDOW_DIMENSIONS)
+        self.setWindowTitle(WINDOW_TITLE)
         self.show()
 
     def load(self):
-        url = QUrl.fromUserInput(self.address.text())
+        url = QUrl.fromUserInput(self.address_bar.text())
         self.tabs.currentWidget().setUrl(url)
 
     def back(self):
@@ -58,9 +68,9 @@ class Browser(QMainWindow):
     def forward(self):
         self.tabs.currentWidget().page().triggerAction(QWebEnginePage.Forward)
 
-    def add_new_tab(self, qurl = None, label = "Blank"):
+    def add_new_tab(self, qurl = None, label = "Default"):
         if qurl is None:
-            qurl = QUrl.fromUserInput("about:blank")
+            qurl = QUrl.fromUserInput(NEW_TABS_DEFAULT_URL)
         browser_tab = QWebEngineView()
         i = self.tabs.addTab(browser_tab, label)
         self.tabs.setCurrentIndex(i)
@@ -85,7 +95,7 @@ class Browser(QMainWindow):
         self.forBtn.setEnabled(self.tabs.currentWidget().history().canGoForward())
 
     def url_changed(self, url):
-        self.address.setText(url.toString())
+        self.address_bar.setText(url.toString())
 
     def current_tab_changed(self, i):
         qurl = self.tabs.currentWidget().url()
@@ -95,8 +105,8 @@ class Browser(QMainWindow):
     def update_address_bar(self, qurl, browser_tab):
         if browser_tab != self.tabs.currentWidget():
             return
-        self.address.setText(qurl.toString())
-        self.address.setCursorPosition(0)
+        self.address_bar.setText(qurl.toString())
+        self.address_bar.setCursorPosition(0)
 
     def call_create_card_callback(self):
         if self.anki_create_card_callback:

@@ -14,16 +14,16 @@ class BrowserDriver:
 
     def enter_address_and_hit_return(self, text):
         with self._qtbot.waitSignal(self._browser.tabs.currentWidget().loadFinished):
-            self._browser.address.clear()
-            self._qtbot.keyClicks(self._browser.address, text)
-            self._qtbot.keyClick(self._browser.address, Qt.Key_Return)
+            self._browser.address_bar.clear()
+            self._qtbot.keyClicks(self._browser.address_bar, text)
+            self._qtbot.keyClick(self._browser.address_bar, Qt.Key_Return)
 
     def click_backward_button(self):
-        with self._qtbot.waitSignal(self._browser.address.textChanged):
+        with self._qtbot.waitSignal(self._browser.address_bar.textChanged):
             self._qtbot.mouseClick(self._browser.backBtn, Qt.MouseButton.LeftButton)
 
     def click_forward_button(self):
-        with self._qtbot.waitSignal(self._browser.address.textChanged):
+        with self._qtbot.waitSignal(self._browser.address_bar.textChanged):
             self._qtbot.mouseClick(self._browser.forBtn, Qt.MouseButton.LeftButton)
 
     def open_new_tab(self):
@@ -68,7 +68,7 @@ class BrowserDriver:
         assert self._browser.tabs.count() == expected_count
 
     def assert_address_bar_contains(self, expected_string):
-        assert expected_string in self._browser.address.text()
+        assert expected_string in self._browser.address_bar.text()
 
     def assert_backward_button_disabled(self):
         assert not self._browser.backBtn.isEnabled()
