@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QEventLoop, Qt, QObject, pyqtSignal
 
-from embedded_browser.browser.browser import Browser
+from src.browser.browser import Browser
 
 TEST_FIXTURES_DIR = "embedded_browser/test/fixtures"
 
