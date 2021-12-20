@@ -56,33 +56,33 @@ class BrowserDriver:
     def _callback_spy(self, selected_text):
         self._selected_text = selected_text
 
-    def assert_active_browser_tab_title(self, expected_title):
+    def active_tab_has_title(self, expected_title):
         self._qtbot.waitUntil(lambda: self._browser.tabs.currentWidget().title() == expected_title)
 
-    def assert_active_browser_tab_contains_html(self, expected_text):
+    def active_tab_contains_html(self, expected_text):
         browser_page = self._browser.tabs.currentWidget().page()
         html_content = self._reader.read_html(browser_page)
         assert expected_text in html_content
 
-    def assert_tab_count(self, expected_count):
+    def has_open_tabs(self, expected_count):
         assert self._browser.tabs.count() == expected_count
 
-    def assert_address_bar_contains(self, expected_string):
+    def address_bar_contains(self, expected_string):
         assert expected_string in self._browser.address_bar.text()
 
-    def assert_backward_button_disabled(self):
+    def backward_button_is_disabled(self):
         assert not self._browser.backBtn.isEnabled()
 
-    def assert_backward_button_enabled(self):
+    def backward_button_is_enabled(self):
         self._qtbot.waitUntil(lambda: self._browser.backBtn.isEnabled())
 
-    def assert_forward_button_disabled(self):
+    def forward_button_is_disabled(self):
         assert not self._browser.forBtn.isEnabled()
 
-    def assert_forward_button_enabled(self):
+    def forward_button_is_enabled(self):
         self._qtbot.waitUntil(lambda: self._browser.forBtn.isEnabled())
 
-    def assert_context_menu_callback_called_with_expected_text(self, expected_text):
+    def callback_invoked_with_expected_text(self, expected_text):
         assert self._selected_text == expected_text
 
 
