@@ -1,8 +1,7 @@
 from PyQt5.QtCore import QEventLoop, Qt, QObject, pyqtSignal
 
-from src.browser.browser import Browser
+from src.browser import Browser
 
-TEST_FIXTURES_DIR = "embedded_browser/test/fixtures"
 
 class BrowserDriver:
     def __init__(self, qtbot):

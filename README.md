@@ -12,4 +12,4 @@ REPO_DIR=~/repos/anki-addon
 ANKI_ADDONS_DIR=~/Library/Application\ Support/Anki2/addons21
 ln -s ${REPO_DIR}/myaddon ${ANKI_ADDONS_DIR}/myaddon
 ```
-You can check what the the add-ons directory of your Anki installation is under `Tools > Add-ons > View Files`.
+You can check what the add-ons directory of your Anki installation is under `Tools > Add-ons > View Files`.

@@ -3,7 +3,7 @@ import os
 from .browser_driver import BrowserDriver
 
 
-FIXTURES_PATH = f"file:///{os.getcwd()}/test/fixtures"
+FIXTURES_PATH = f"file:///{os.getcwd()}/test/browser/fixtures"
 
 
 def test_loads_page_and_navigates_back_and_forth(qtbot):

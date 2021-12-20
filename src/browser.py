@@ -19,7 +19,7 @@ OPEN_TAB_KEY_SEQUENCE = "Ctrl+T"
 class Browser(QMainWindow):
     def __init__(self, create_card_callback=None):
         super().__init__()
-        self.anki_create_card_callback = create_card_callback
+        self.create_card_callback = create_card_callback
         self.initUI()
 
     def initUI(self):
@@ -109,8 +109,8 @@ class Browser(QMainWindow):
         self.address_bar.setCursorPosition(0)
 
     def call_create_card_callback(self):
-        if self.anki_create_card_callback:
-            self.anki_create_card_callback(self.tabs.currentWidget().selectedText())
+        if self.create_card_callback:
+            self.create_card_callback(self.tabs.currentWidget().selectedText())
 
 
 def main():
