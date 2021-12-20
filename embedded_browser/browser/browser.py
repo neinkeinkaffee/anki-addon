@@ -1,14 +1,15 @@
 import sys
 
-from PyQt5.QtCore import QUrl
+from PyQt5.QtCore import QUrl, Qt
 from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from PyQt5.QtWidgets import (QApplication, QLineEdit, QMainWindow, QPushButton, QToolBar, QTabWidget, QShortcut)
 
 
 class Browser(QMainWindow):
-    def __init__(self):
+    def __init__(self, create_card_callback=None):
         super(Browser, self).__init__()
+        self.anki_create_card_callback = create_card_callback
         self.initUI()
 
     def initUI(self):
@@ -36,6 +37,7 @@ class Browser(QMainWindow):
         self.tabs.setTabsClosable(True)
         QShortcut(QKeySequence("Ctrl+T"), self, self.add_new_tab)
         QShortcut(QKeySequence("Ctrl+W"), self, self.close_active_tab)
+        QShortcut(QKeySequence(Qt.Key_Enter + Qt.AltModifier), self, self.call_create_card_callback)
         self.tabs.currentChanged.connect(self.current_tab_changed)
         self.tabs.tabCloseRequested.connect(self.close_tab)
         self.setCentralWidget(self.tabs)
@@ -95,6 +97,10 @@ class Browser(QMainWindow):
             return
         self.address.setText(qurl.toString())
         self.address.setCursorPosition(0)
+
+    def call_create_card_callback(self):
+        if self.anki_create_card_callback:
+            self.anki_create_card_callback(self.tabs.currentWidget().selectedText())
 
 
 def main():

@@ -1,16 +1,15 @@
-import os
+from PyQt5.QtCore import QEventLoop, Qt, QObject, pyqtSignal
 
-from PyQt5.QtCore import QEventLoop, Qt, QObject, pyqtSignal, QUrl
 from embedded_browser.browser.browser import Browser
 
 TEST_FIXTURES_DIR = "embedded_browser/test/fixtures"
 
 class BrowserDriver:
-    def __init__(self, qtbot, monkeypatch):
+    def __init__(self, qtbot):
         self._qtbot = qtbot
-        self._monkeypatch = monkeypatch
-        self._browser = Browser()
+        self._browser = Browser(create_card_callback=self._callback_spy)
         self._reader = PageReader()
+        self._selected_text = ""
         qtbot.addWidget(self._browser)
 
     def enter_address_and_hit_return(self, text):
@@ -38,6 +37,25 @@ class BrowserDriver:
     def close_active_tab(self):
         self._qtbot.keyClicks(self._browser.tabs, "W", Qt.ControlModifier)
 
+    def select_test_span_and_trigger_copy_to_card_action(self):
+        with self._qtbot.waitSignal(self._browser.tabs.currentWidget().selectionChanged):
+            self._select_element_with_target_id(self._browser.tabs.currentWidget())
+        self._qtbot.keyClick(self._browser.tabs.currentWidget(), Qt.Key_Enter, Qt.AltModifier)
+
+    def _select_element_with_target_id(self, widget):
+        # https://stackoverflow.com/a/987376
+        widget.page().runJavaScript(("""
+            node = document.getElementById('target');
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        """))
+
+    def _callback_spy(self, selected_text):
+        self._selected_text = selected_text
+
     def assert_active_browser_tab_title(self, expected_title):
         self._qtbot.waitUntil(lambda: self._browser.tabs.currentWidget().title() == expected_title)
 
@@ -63,6 +81,9 @@ class BrowserDriver:
 
     def assert_forward_button_enabled(self):
         self._qtbot.waitUntil(lambda: self._browser.forBtn.isEnabled())
+
+    def assert_context_menu_callback_called_with_expected_text(self, expected_text):
+        assert self._selected_text == expected_text
 
 
 class PageReader(QObject):
