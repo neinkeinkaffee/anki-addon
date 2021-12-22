@@ -3,44 +3,45 @@ import sys
 from PyQt5.QtCore import QUrl, Qt
 from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
-from PyQt5.QtWidgets import (QApplication, QLineEdit, QMainWindow, QPushButton, QToolBar, QTabWidget, QShortcut)
+from PyQt5.QtWidgets import (QApplication, QLineEdit, QPushButton, QToolBar, QTabWidget, QShortcut,
+                             QWidget, QVBoxLayout)
 
-
-WINDOW_DIMENSIONS = (300, 300, 500, 400)
 BACK_ARROW_URI = ":/qt-project.org/styles/commonstyle/images/left-32.png"
 FORWARD_ARROW_URI = ":/qt-project.org/styles/commonstyle/images/right-32.png"
 FIRST_TAB_DEFAULT_URL = "https://duckduckgo.com"
 NEW_TABS_DEFAULT_URL = "about:blank"
-WINDOW_TITLE = "Browser"
 CLOSE_TAB_KEY_SEQUENCE = "Ctrl+W"
 OPEN_TAB_KEY_SEQUENCE = "Ctrl+T"
 
 
-class Browser(QMainWindow):
+class Browser(QWidget):
     def __init__(self, create_card_callback=None):
         super().__init__()
         self.create_card_callback = create_card_callback
         self.initUI()
 
     def initUI(self):
-        self.toolBar = QToolBar(self)
-        self.addToolBar(self.toolBar)
+        self.vbox = QVBoxLayout()
+        self.setLayout(self.vbox)
+
+        self.toolbar = QToolBar(self)
+        self.vbox.addWidget(self.toolbar)
 
         self.backBtn = QPushButton(self)
         self.backBtn.setEnabled(False)
         self.backBtn.setIcon(QIcon(BACK_ARROW_URI))
         self.backBtn.clicked.connect(self.back)
-        self.toolBar.addWidget(self.backBtn)
+        self.toolbar.addWidget(self.backBtn)
 
         self.forBtn = QPushButton(self)
         self.forBtn.setEnabled(False)
         self.forBtn.setIcon(QIcon(FORWARD_ARROW_URI))
         self.forBtn.clicked.connect(self.forward)
-        self.toolBar.addWidget(self.forBtn)
+        self.toolbar.addWidget(self.forBtn)
 
         self.address_bar = QLineEdit(self)
         self.address_bar.returnPressed.connect(self.load)
-        self.toolBar.addWidget(self.address_bar)
+        self.toolbar.addWidget(self.address_bar)
 
         self.tabs = QTabWidget()
         self.tabs.setDocumentMode(True)
@@ -50,12 +51,10 @@ class Browser(QMainWindow):
         QShortcut(QKeySequence(Qt.Key_Enter + Qt.AltModifier), self, self.call_create_card_callback)
         self.tabs.currentChanged.connect(self.current_tab_changed)
         self.tabs.tabCloseRequested.connect(self.close_tab)
-        self.setCentralWidget(self.tabs)
+        self.vbox.addWidget(self.tabs)
 
         self.add_new_tab(QUrl(FIRST_TAB_DEFAULT_URL))
 
-        self.setGeometry(*WINDOW_DIMENSIONS)
-        self.setWindowTitle(WINDOW_TITLE)
         self.show()
 
     def load(self):

@@ -6,7 +6,7 @@ from .window import Window
 
 
 def open_window():
-    Window()
+    w = Window(mw)
 
 
 open_window_action = QAction("Browser", mw)
