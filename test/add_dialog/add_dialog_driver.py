@@ -21,3 +21,7 @@ class AddDialogDriver:
 
     def note_got_added(self):
         self._qtbot.waitUntil(lambda: self.mw.col.note_count() == 1)
+
+    def shows_empty_note(self):
+        assert self._editor.note.fields[0] == ""
+        assert self._editor.note.fields[1] == ""

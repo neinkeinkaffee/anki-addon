@@ -13,6 +13,8 @@ class AddDialog(QWidget):
 
         self.editor = editor.Editor(mw, QWidget(self), self, True)
         self.vbox.addWidget(self.editor.widget)
+        note = mw.col.newNote()
+        self.editor.set_note(note)
 
         self.button_box = QDialogButtonBox(self)
         self.button_box.setOrientation(Qt.Horizontal)
