@@ -1,6 +1,6 @@
 from aqt.main import AnkiQt
 
-from test.editor.editor_driver import AddDialogDriver
+from test.add_dialog.add_dialog_driver import AddDialogDriver
 
 
 def test_can_add_note(anki_session, qtbot, monkeypatch):
