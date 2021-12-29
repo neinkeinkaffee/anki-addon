@@ -1,13 +1,11 @@
 from PyQt5.QtCore import Qt
 
-from src.add_dialog import AddDialog
-
 
 class AddDialogDriver:
-    def __init__(self, qtbot, mw):
+    def __init__(self, add_dialog, qtbot, mw):
         self._qtbot = qtbot
         self.mw = mw
-        self._add_dialog = AddDialog(mw)
+        self._add_dialog = add_dialog
         self._editor = self._add_dialog.editor
 
     def enter_new_note(self, front, back):
@@ -25,3 +23,6 @@ class AddDialogDriver:
     def shows_empty_note(self):
         assert self._editor.note.fields[0] == ""
         assert self._editor.note.fields[1] == ""
+
+    def enter_note_front(self, front):
+        self._editor.note.fields[0] = front

@@ -4,7 +4,6 @@ from PyQt5.QtWidgets import QAction
 
 from .window import Window
 
-
 def open_window():
     w = Window(mw)
 

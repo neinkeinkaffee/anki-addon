@@ -15,9 +15,9 @@ OPEN_TAB_KEY_SEQUENCE = "Ctrl+T"
 
 
 class Browser(QWidget):
-    def __init__(self, create_card_callback=None):
+    def __init__(self):
         super().__init__()
-        self.create_card_callback = create_card_callback
+        self.create_card_callback = None
         self.initUI()
 
     def initUI(self):
@@ -48,7 +48,7 @@ class Browser(QWidget):
         self.tabs.setTabsClosable(True)
         QShortcut(QKeySequence(OPEN_TAB_KEY_SEQUENCE), self, self.add_new_tab)
         QShortcut(QKeySequence(CLOSE_TAB_KEY_SEQUENCE), self, self.close_active_tab)
-        QShortcut(QKeySequence(Qt.Key_Enter + Qt.AltModifier), self, self.call_create_card_callback)
+        QShortcut(QKeySequence(Qt.Key_B + Qt.AltModifier), self, self.call_create_card_callback)
         self.tabs.currentChanged.connect(self.current_tab_changed)
         self.tabs.tabCloseRequested.connect(self.close_tab)
         self.vbox.addWidget(self.tabs)
@@ -56,6 +56,9 @@ class Browser(QWidget):
         self.add_new_tab(QUrl(FIRST_TAB_DEFAULT_URL))
 
         self.show()
+
+    def set_create_card_callback(self, callback):
+        self.create_card_callback = callback
 
     def load(self):
         url = QUrl.fromUserInput(self.address_bar.text())
@@ -109,6 +112,8 @@ class Browser(QWidget):
 
     def call_create_card_callback(self):
         if self.create_card_callback:
+            from aqt.utils import showInfo
+            showInfo("Currently selected text: %s" % self.tabs.currentWidget().selectedText())
             self.create_card_callback(self.tabs.currentWidget().selectedText())
 
 

@@ -1,13 +1,14 @@
 import os
 
+from src.browser import Browser
 from .browser_driver import BrowserDriver
 
 
-FIXTURES_PATH = f"file:///{os.getcwd()}/test/browser/fixtures"
+FIXTURES_PATH = f"file://{os.getcwd()}/test/browser/fixtures"
 
 
 def test_loads_page_and_navigates_back_and_forth(qtbot):
-    browser = BrowserDriver(qtbot)
+    browser = BrowserDriver(Browser(), qtbot)
 
     browser.enter_address_and_hit_return(f"{FIXTURES_PATH}/page_1.html")
     browser.address_bar_contains("page_1.html")
@@ -31,7 +32,7 @@ def test_loads_page_and_navigates_back_and_forth(qtbot):
 
 
 def test_opens_new_tab_with_blank_default_page(qtbot):
-    browser = BrowserDriver(qtbot)
+    browser = BrowserDriver(Browser(), qtbot)
 
     browser.open_new_tab()
 
@@ -41,7 +42,7 @@ def test_opens_new_tab_with_blank_default_page(qtbot):
 
 
 def test_backward_and_forward_buttons_are_tab_sensitive(qtbot):
-    browser = BrowserDriver(qtbot)
+    browser = BrowserDriver(Browser(), qtbot)
     browser.backward_button_is_disabled()
 
     browser.open_new_tab()
@@ -59,7 +60,7 @@ def test_backward_and_forward_buttons_are_tab_sensitive(qtbot):
 
 
 def test_closes_tabs_but_keeps_last_tab_open(qtbot):
-    browser = BrowserDriver(qtbot)
+    browser = BrowserDriver(Browser(), qtbot)
 
     browser.open_new_tab()
     browser.has_open_tabs(2)
@@ -72,7 +73,8 @@ def test_closes_tabs_but_keeps_last_tab_open(qtbot):
 
 
 def test_calls_callback_on_clicking_context_menu_action(qtbot):
-    browser = BrowserDriver(qtbot)
+    browser = BrowserDriver(Browser(), qtbot)
+    browser.set_callback_spy()
 
     browser.enter_address_and_hit_return(f"{FIXTURES_PATH}/page_with_test_span.html")
     browser.select_test_span_and_trigger_copy_to_card_action()

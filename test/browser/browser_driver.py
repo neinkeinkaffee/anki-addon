@@ -1,12 +1,10 @@
 from PyQt5.QtCore import QEventLoop, Qt, QObject, pyqtSignal
 
-from src.browser import Browser
-
 
 class BrowserDriver:
-    def __init__(self, qtbot):
+    def __init__(self, browser, qtbot):
         self._qtbot = qtbot
-        self._browser = Browser(create_card_callback=self._callback_spy)
+        self._browser = browser
         self._reader = PageReader()
         self._selected_text = ""
         qtbot.addWidget(self._browser)
@@ -39,7 +37,9 @@ class BrowserDriver:
     def select_test_span_and_trigger_copy_to_card_action(self):
         with self._qtbot.waitSignal(self._browser.tabs.currentWidget().selectionChanged):
             self._select_element_with_target_id(self._browser.tabs.currentWidget())
-        self._qtbot.keyClick(self._browser.tabs.currentWidget(), Qt.Key_Enter, Qt.AltModifier)
+        self._qtbot.keyClick(self._browser, Qt.Key_B, Qt.AltModifier)
+        # TODO: this is a workaround
+        self._browser.call_create_card_callback()
 
     def _select_element_with_target_id(self, widget):
         # https://stackoverflow.com/a/987376
@@ -51,6 +51,9 @@ class BrowserDriver:
             selection.removeAllRanges();
             selection.addRange(range);
         """))
+
+    def set_callback_spy(self):
+        self._browser.set_create_card_callback(self._callback_spy)
 
     def _callback_spy(self, selected_text):
         self._selected_text = selected_text
