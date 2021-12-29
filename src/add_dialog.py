@@ -28,8 +28,6 @@ class AddDialog(QWidget):
         self.show()
 
     def create_card_with_back(self, back):
-        from aqt.utils import showInfo
-        showInfo("Got the text: %s" % back)
         note = self.mw.col.newNote()
         note.fields[1] = back
         self.editor.set_note(note, focusTo=0)

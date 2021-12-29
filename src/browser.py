@@ -112,8 +112,6 @@ class Browser(QWidget):
 
     def call_create_card_callback(self):
         if self.create_card_callback:
-            from aqt.utils import showInfo
-            showInfo("Currently selected text: %s" % self.tabs.currentWidget().selectedText())
             self.create_card_callback(self.tabs.currentWidget().selectedText())
 
 
