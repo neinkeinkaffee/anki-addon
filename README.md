@@ -22,4 +22,3 @@ You can check what the add-ons directory of your Anki installation is under `Too
 - Enable opening in new tab in context menu (currently has no effect)
 - Disable opening in new window (delete from context menu)
 - Add dictionary lookup function to context menu (search engine lookup?)
-- Enable search engine queries in search bar

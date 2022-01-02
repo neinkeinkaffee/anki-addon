@@ -80,3 +80,11 @@ def test_calls_callback_on_clicking_context_menu_action(qtbot):
     browser.select_test_span_and_trigger_copy_to_card_action()
 
     browser.callback_invoked_with_expected_text("百香果綠茶")
+
+
+def test_query_search_engine_from_searchbar(qtbot):
+    browser = BrowserDriver(Browser(), qtbot)
+
+    browser.enter_address_and_hit_return("passion fruit green tea")
+
+    browser.address_bar_contains("?q=passion+fruit+green+tea")

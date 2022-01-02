@@ -1,3 +1,4 @@
+import re
 import sys
 
 from PyQt5.QtCore import QUrl, Qt, pyqtSignal
@@ -14,6 +15,10 @@ NEW_TABS_DEFAULT_URL = "about:blank"
 CLOSE_TAB_KEY_SEQUENCE = "Ctrl+W"
 OPEN_TAB_KEY_SEQUENCE = "Ctrl+T"
 CREATE_CARD_MODIFIER = "Ctrl+L"
+# Source: https://gist.github.com/gruber/249502
+URL_REGEX = re.compile(r'(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)'
+                       r'(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)'
+                       r'|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))')
 
 
 class Browser(QWidget):
@@ -64,7 +69,11 @@ class Browser(QWidget):
         self.show()
 
     def load(self):
-        url = QUrl.fromUserInput(self.address_bar.text())
+        address_bar_input = self.address_bar.text()
+        if re.match(URL_REGEX, address_bar_input):
+            url = QUrl.fromUserInput(address_bar_input)
+        else:
+            url = QUrl("https://duckduckgo.com?q=" + address_bar_input)
         self.tabs.currentWidget().setUrl(url)
 
     def back(self):
