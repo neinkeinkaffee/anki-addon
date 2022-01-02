@@ -79,4 +79,4 @@ def test_calls_callback_on_clicking_context_menu_action(qtbot):
     browser.enter_address_and_hit_return(f"{FIXTURES_PATH}/page_with_test_span.html")
     browser.select_test_span_and_trigger_copy_to_card_action()
 
-    browser.callback_invoked_with_expected_text("selection test")
+    browser.callback_invoked_with_expected_text("百香果綠茶")
