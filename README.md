@@ -13,3 +13,10 @@ ANKI_ADDONS_DIR=~/Library/Application\ Support/Anki2/addons21
 ln -s ${REPO_DIR}/myaddon ${ANKI_ADDONS_DIR}/myaddon
 ```
 You can check what the add-ons directory of your Anki installation is under `Tools > Add-ons > View Files`.
+
+### Todo
+
+- Enable opening in new tab in context menu (currently has no effect)
+- Disable opening in new window (delete from context menu)
+- Add dictionary lookup function to context menu (search engine lookup?)
+- Enable search engine queries in search bar
