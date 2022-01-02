@@ -37,8 +37,9 @@ class BrowserDriver:
     def select_test_span_and_trigger_copy_to_card_action(self):
         with self._qtbot.waitSignal(self._browser.tabs.currentWidget().selectionChanged):
             self._select_element_with_target_id(self._browser.tabs.currentWidget())
-            self._qtbot.keyClick(self._browser.tabs.currentWidget(), Qt.Key_L, Qt.ControlModifier)
-        # TODO: this is a workaround because keyClick doesn't seem to connect to emit_create_card_signal
+        # TODO: need to call the slot function directly because qtbot.keyClick can't trigger the shortcut
+        # see https://github.com/pytest-dev/pytest-qt/issues/254
+        #self._qtbot.keyClick(self._browser.tabs.currentWidget(), Qt.Key_L, Qt.ControlModifier)
         self._browser.emit_create_card_signal()
 
     def _select_element_with_target_id(self, widget):

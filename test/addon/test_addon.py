@@ -17,11 +17,11 @@ def test_copy_text_to_back(anki_session: AnkiSession, qtbot, monkeypatch):
         addon = anki_session.load_addon(package_name="src")
         addon.open_window_action.trigger()
         add_dialog_instance = anki_session.mw.app.activeWindow().add_dialog
-        browser_instance = anki_session.mw.app.activeWindow().browser
-
         add_dialog = AddDialogDriver(add_dialog_instance, qtbot, anki_session.mw)
+        browser_instance = anki_session.mw.app.activeWindow().browser
         browser = BrowserDriver(browser_instance, qtbot)
         browser.connect_create_card_signal_to_slot(add_dialog_instance.create_card_with_back)
+
         browser.enter_address_and_hit_return(f"{FIXTURES_PATH}/page_with_test_span.html")
         browser.select_test_span_and_trigger_copy_to_card_action()
         add_dialog.enter_note_front("passion fruit green tea")
