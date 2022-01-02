@@ -25,21 +25,21 @@ class BrowserDriver:
 
     def open_new_tab(self):
         with self._qtbot.waitSignal(self._browser.tabs.currentWidget().loadFinished):
-            self._qtbot.keyClicks(self._browser.tabs, "T", Qt.ControlModifier)
+            self._qtbot.keyClick(self._browser.tabs, Qt.Key_T, Qt.ControlModifier)
 
     def switch_to_tab(self, index):
         with self._qtbot.waitSignal(self._browser.tabs.currentChanged):
             self._browser.tabs.setCurrentIndex(index)
 
     def close_active_tab(self):
-        self._qtbot.keyClicks(self._browser.tabs, "W", Qt.ControlModifier)
+        self._qtbot.keyClick(self._browser.tabs, Qt.Key_W, Qt.ControlModifier)
 
     def select_test_span_and_trigger_copy_to_card_action(self):
         with self._qtbot.waitSignal(self._browser.tabs.currentWidget().selectionChanged):
             self._select_element_with_target_id(self._browser.tabs.currentWidget())
-        self._qtbot.keyClick(self._browser, Qt.Key_B, Qt.AltModifier)
-        # TODO: this is a workaround
-        self._browser.call_create_card_callback()
+            self._qtbot.keyClick(self._browser.tabs.currentWidget(), Qt.Key_L, Qt.ControlModifier)
+        # TODO: this is a workaround because keyClick doesn't seem to connect to emit_create_card_signal
+        self._browser.emit_create_card_signal()
 
     def _select_element_with_target_id(self, widget):
         # https://stackoverflow.com/a/987376
@@ -52,8 +52,10 @@ class BrowserDriver:
             selection.addRange(range);
         """))
 
-    def set_callback_spy(self):
-        self._browser.set_create_card_callback(self._callback_spy)
+    def connect_create_card_signal_to_slot(self, slot=None):
+        if not slot:
+            slot = self._callback_spy
+        self._browser.create_card_signal.connect(slot)
 
     def _callback_spy(self, selected_text):
         self._selected_text = selected_text

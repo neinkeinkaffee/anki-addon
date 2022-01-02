@@ -74,7 +74,7 @@ def test_closes_tabs_but_keeps_last_tab_open(qtbot):
 
 def test_calls_callback_on_clicking_context_menu_action(qtbot):
     browser = BrowserDriver(Browser(), qtbot)
-    browser.set_callback_spy()
+    browser.connect_create_card_signal_to_slot()
 
     browser.enter_address_and_hit_return(f"{FIXTURES_PATH}/page_with_test_span.html")
     browser.select_test_span_and_trigger_copy_to_card_action()

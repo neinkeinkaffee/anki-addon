@@ -12,7 +12,7 @@ class Window(QDialog):
 
         self.add_dialog = AddDialog(mw)
         self.browser = Browser()
-        self.browser.set_create_card_callback(self.add_dialog.create_card_with_back)
+        self.browser.create_card_signal.connect(self.add_dialog.create_card_with_back)
         hbox.addWidget(self.add_dialog)
         hbox.addWidget(self.browser)
 

@@ -1,10 +1,11 @@
 import sys
 
-from PyQt5.QtCore import QUrl, Qt
+from PyQt5.QtCore import QUrl, Qt, pyqtSignal
 from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from PyQt5.QtWidgets import (QApplication, QLineEdit, QPushButton, QToolBar, QTabWidget, QShortcut,
                              QWidget, QVBoxLayout)
+
 
 BACK_ARROW_URI = ":/qt-project.org/styles/commonstyle/images/left-32.png"
 FORWARD_ARROW_URI = ":/qt-project.org/styles/commonstyle/images/right-32.png"
@@ -12,15 +13,21 @@ FIRST_TAB_DEFAULT_URL = "https://duckduckgo.com"
 NEW_TABS_DEFAULT_URL = "about:blank"
 CLOSE_TAB_KEY_SEQUENCE = "Ctrl+W"
 OPEN_TAB_KEY_SEQUENCE = "Ctrl+T"
+CREATE_CARD_MODIFIER = "Ctrl+L"
 
 
 class Browser(QWidget):
+    create_card_signal = pyqtSignal(str)
+
     def __init__(self):
         super().__init__()
         self.create_card_callback = None
         self.initUI()
 
     def initUI(self):
+        create_card_shortcut = QShortcut(QKeySequence(CREATE_CARD_MODIFIER), self)
+        create_card_shortcut.activated.connect(self.emit_create_card_signal)
+
         self.vbox = QVBoxLayout()
         self.setLayout(self.vbox)
 
@@ -48,7 +55,6 @@ class Browser(QWidget):
         self.tabs.setTabsClosable(True)
         QShortcut(QKeySequence(OPEN_TAB_KEY_SEQUENCE), self, self.add_new_tab)
         QShortcut(QKeySequence(CLOSE_TAB_KEY_SEQUENCE), self, self.close_active_tab)
-        QShortcut(QKeySequence(Qt.Key_B + Qt.AltModifier), self, self.call_create_card_callback)
         self.tabs.currentChanged.connect(self.current_tab_changed)
         self.tabs.tabCloseRequested.connect(self.close_tab)
         self.vbox.addWidget(self.tabs)
@@ -56,9 +62,6 @@ class Browser(QWidget):
         self.add_new_tab(QUrl(FIRST_TAB_DEFAULT_URL))
 
         self.show()
-
-    def set_create_card_callback(self, callback):
-        self.create_card_callback = callback
 
     def load(self):
         url = QUrl.fromUserInput(self.address_bar.text())
@@ -110,9 +113,8 @@ class Browser(QWidget):
         self.address_bar.setText(qurl.toString())
         self.address_bar.setCursorPosition(0)
 
-    def call_create_card_callback(self):
-        if self.create_card_callback:
-            self.create_card_callback(self.tabs.currentWidget().selectedText())
+    def emit_create_card_signal(self):
+        self.create_card_signal.emit(self.tabs.currentWidget().selectedText())
 
 
 def main():
