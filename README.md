@@ -1,10 +1,13 @@
 # Anki embedded browser
 
+### Running the tests
 To run the tests, install `pytest-anki`.
 ```
 pip install pytest-anki
 pytest test.py
 ```
+
+### Installing the addon
 
 To enable addon in Anki, add a symbolic link to the add-on folder in the Anki add-ons directory.
 ```
