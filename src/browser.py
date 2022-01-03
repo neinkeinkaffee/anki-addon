@@ -14,7 +14,8 @@ FIRST_TAB_DEFAULT_URL = "https://duckduckgo.com"
 NEW_TABS_DEFAULT_URL = "about:blank"
 CLOSE_TAB_KEY_SEQUENCE = "Ctrl+W"
 OPEN_TAB_KEY_SEQUENCE = "Ctrl+T"
-CREATE_CARD_MODIFIER = "Ctrl+L"
+CREATE_CARD_KEY_SEQUENCE = "Ctrl+L"
+LAUNCH_QUERY_KEY_SEQUENCE = "Ctrl+K"
 # Source: https://gist.github.com/gruber/249502
 URL_REGEX = re.compile(r'(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)'
                        r'(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)'
@@ -30,7 +31,7 @@ class Browser(QWidget):
         self.initUI()
 
     def initUI(self):
-        create_card_shortcut = QShortcut(QKeySequence(CREATE_CARD_MODIFIER), self)
+        create_card_shortcut = QShortcut(QKeySequence(CREATE_CARD_KEY_SEQUENCE), self)
         create_card_shortcut.activated.connect(self.emit_create_card_signal)
 
         self.vbox = QVBoxLayout()
@@ -60,6 +61,7 @@ class Browser(QWidget):
         self.tabs.setTabsClosable(True)
         QShortcut(QKeySequence(OPEN_TAB_KEY_SEQUENCE), self, self.add_new_tab)
         QShortcut(QKeySequence(CLOSE_TAB_KEY_SEQUENCE), self, self.close_active_tab)
+        QShortcut(QKeySequence(LAUNCH_QUERY_KEY_SEQUENCE), self, self.launch_query)
         self.tabs.currentChanged.connect(self.current_tab_changed)
         self.tabs.tabCloseRequested.connect(self.close_tab)
         self.vbox.addWidget(self.tabs)
@@ -100,6 +102,11 @@ class Browser(QWidget):
             return
         self.tabs.removeTab(i)
 
+    def launch_query(self):
+        query = self.tabs.currentWidget().selectedText()
+        qurl = QUrl("https://duckduckgo.com?q=" + query)
+        self.add_new_tab(qurl)
+
     def on_load_finished(self, i, browser_tab):
         self.tabs.setTabText(i, browser_tab.page().title())
         self.toggle_browser_history_buttons()
@@ -111,7 +118,7 @@ class Browser(QWidget):
     def url_changed(self, url):
         self.address_bar.setText(url.toString())
 
-    def current_tab_changed(self, i):
+    def current_tab_changed(self):
         qurl = self.tabs.currentWidget().url()
         self.update_address_bar(qurl, self.tabs.currentWidget())
         self.toggle_browser_history_buttons()

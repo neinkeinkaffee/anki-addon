@@ -34,6 +34,13 @@ class BrowserDriver:
     def close_active_tab(self):
         self._qtbot.keyClick(self._browser.tabs, Qt.Key_W, Qt.ControlModifier)
 
+    def select_test_span(self):
+        with self._qtbot.waitSignal(self._browser.tabs.currentWidget().selectionChanged):
+            self._select_element_with_target_id(self._browser.tabs.currentWidget())
+
+    def trigger_query_search_engine_action(self):
+        self._qtbot.keyClick(self._browser.tabs.currentWidget(), Qt.Key_K, Qt.ControlModifier)
+
     def select_test_span_and_trigger_copy_to_card_action(self):
         with self._qtbot.waitSignal(self._browser.tabs.currentWidget().selectionChanged):
             self._select_element_with_target_id(self._browser.tabs.currentWidget())

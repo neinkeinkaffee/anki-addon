@@ -88,3 +88,13 @@ def test_query_search_engine_from_searchbar(qtbot):
     browser.enter_address_and_hit_return("passion fruit green tea")
 
     browser.address_bar_contains("?q=passion+fruit+green+tea")
+
+
+def test_query_search_engine_from_selection(qtbot):
+    browser = BrowserDriver(Browser(), qtbot)
+
+    browser.enter_address_and_hit_return(f"{FIXTURES_PATH}/page_with_test_span.html")
+    browser.select_test_span()
+    browser.trigger_query_search_engine_action()
+
+    browser.address_bar_contains("?q=百香果綠茶")
