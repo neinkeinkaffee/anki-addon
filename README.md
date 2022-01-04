@@ -19,6 +19,5 @@ You can check what the add-ons directory of your Anki installation is under `Too
 
 ### Todo
 
-- Enable opening in new tab in context menu (currently has no effect)
-- Disable opening in new window (delete from context menu)
-- Add dictionary lookup
+- Add dedicated dictionary lookup
+- Add legend with shortcuts
