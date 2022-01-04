@@ -5,7 +5,7 @@ from PyQt5.QtCore import QUrl, Qt, pyqtSignal
 from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from PyQt5.QtWidgets import (QApplication, QLineEdit, QPushButton, QToolBar, QTabWidget, QShortcut,
-                             QWidget, QVBoxLayout)
+                             QWidget, QVBoxLayout, QMenu)
 
 
 BACK_ARROW_URI = ":/qt-project.org/styles/commonstyle/images/left-32.png"
@@ -31,8 +31,8 @@ class Browser(QWidget):
         self.initUI()
 
     def initUI(self):
-        create_card_shortcut = QShortcut(QKeySequence(CREATE_CARD_KEY_SEQUENCE), self)
-        create_card_shortcut.activated.connect(self.emit_create_card_signal)
+        QShortcut(QKeySequence(CREATE_CARD_KEY_SEQUENCE), self, self.emit_create_card_signal)
+        QShortcut(QKeySequence(LAUNCH_QUERY_KEY_SEQUENCE), self, self.launch_query)
 
         self.vbox = QVBoxLayout()
         self.setLayout(self.vbox)
@@ -61,7 +61,6 @@ class Browser(QWidget):
         self.tabs.setTabsClosable(True)
         QShortcut(QKeySequence(OPEN_TAB_KEY_SEQUENCE), self, self.add_new_tab)
         QShortcut(QKeySequence(CLOSE_TAB_KEY_SEQUENCE), self, self.close_active_tab)
-        QShortcut(QKeySequence(LAUNCH_QUERY_KEY_SEQUENCE), self, self.launch_query)
         self.tabs.currentChanged.connect(self.current_tab_changed)
         self.tabs.tabCloseRequested.connect(self.close_tab)
         self.vbox.addWidget(self.tabs)
