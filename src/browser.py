@@ -22,6 +22,28 @@ URL_REGEX = re.compile(r'(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.
                        r'|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))')
 
 
+class Tab(QWebEngineView):
+    open_link_in_tab_requested = pyqtSignal(QUrl)
+
+    def __init__(self):
+        super().__init__()
+
+    def contextMenuEvent(self, event):
+        menu = self.page().createStandardContextMenu()
+        if self._link_was_clicked():
+            open_new_tab_action = menu.actions()[0]
+            open_new_tab_action.triggered.connect(self._emit_open_tab_signal)
+            open_new_window_action = menu.actions()[1]
+            open_new_window_action.setVisible(False)
+        menu.exec_(event.globalPos())
+
+    def _link_was_clicked(self):
+        return not self.page().contextMenuData().linkUrl().isEmpty()
+
+    def _emit_open_tab_signal(self):
+        self.open_link_in_tab_requested.emit(self.page().contextMenuData().linkUrl())
+
+
 class Browser(QWidget):
     create_card_signal = pyqtSignal(str)
 
@@ -86,12 +108,13 @@ class Browser(QWidget):
     def add_new_tab(self, qurl = None, label = "Default"):
         if qurl is None:
             qurl = QUrl.fromUserInput(NEW_TABS_DEFAULT_URL)
-        browser_tab = QWebEngineView()
-        i = self.tabs.addTab(browser_tab, label)
+        tab = Tab()
+        i = self.tabs.addTab(tab, label)
         self.tabs.setCurrentIndex(i)
-        browser_tab.urlChanged.connect(lambda qurl, browser_tab = browser_tab: self.update_address_bar(qurl, browser_tab))
-        browser_tab.loadFinished.connect(lambda _, i = i, browser_tab = browser_tab: self.on_load_finished(i, browser_tab))
-        browser_tab.setUrl(qurl)
+        tab.urlChanged.connect(lambda qurl, browser_tab = tab: self.update_address_bar(qurl, browser_tab))
+        tab.loadFinished.connect(lambda _, i = i, browser_tab = tab: self.on_load_finished(i, browser_tab))
+        tab.open_link_in_tab_requested.connect(self.add_new_tab)
+        tab.setUrl(qurl)
 
     def close_active_tab(self):
         self.close_tab(self.tabs.currentIndex())
