@@ -1,4 +1,4 @@
-# Anki embedded browser
+# Anki browser
 
 ### Running the tests
 To run the tests, install `pytest-anki`.
