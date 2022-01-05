@@ -3,13 +3,14 @@ from PyQt5.QtWidgets import QWidget, QDialogButtonBox, QVBoxLayout
 from anki.decks import DeckId
 from aqt import editor, tr
 from aqt.operations.note import add_note
-from aqt.qt import qconnect
+
 
 class AddDialog(QWidget):
-    def __init__(self, mw):
+    def __init__(self, mw, collection):
         super().__init__()
 
         self.mw = mw
+        self.collection = collection
 
         self.vbox = QVBoxLayout()
         self.setLayout(self.vbox)
@@ -20,7 +21,7 @@ class AddDialog(QWidget):
         self.button_box = QDialogButtonBox(self)
         self.button_box.setOrientation(Qt.Horizontal)
         self.add_button = self.button_box.addButton(tr.actions_add(), QDialogButtonBox.ActionRole)
-        qconnect(self.add_button.clicked, self.add_current_note)
+        self.add_button.clicked.connect(self.add_current_note)
         self.vbox.addWidget(self.button_box)
 
         self.set_new_note()
@@ -28,12 +29,12 @@ class AddDialog(QWidget):
         self.show()
 
     def create_card_with_back(self, back):
-        note = self.mw.col.newNote()
+        note = self.collection.new_note()
         note.fields[1] = back
         self.editor.set_note(note, focusTo=0)
 
     def set_new_note(self):
-        note = self.mw.col.newNote()
+        note = self.collection.new_note()
         self.editor.set_note(note)
 
     def add_current_note(self):
