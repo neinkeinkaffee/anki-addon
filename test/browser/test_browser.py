@@ -87,7 +87,7 @@ def test_query_search_engine_from_searchbar(qtbot):
 
     browser.enter_address_and_hit_return("passion fruit green tea")
 
-    browser.address_bar_contains("?q=passion fruit green tea")
+    browser.address_bar_contains("?q=passion+fruit+green+tea")
 
 
 def test_query_search_engine_from_selection(qtbot):
