@@ -1,10 +1,10 @@
 import os
 
 from src.browser import Browser
-from .browser_driver import BrowserDriver
+from test.drivers.browser_driver import BrowserDriver
 
 
-FIXTURES_PATH = f"file://{os.getcwd()}/test/browser/fixtures"
+FIXTURES_PATH = f"file://{os.getcwd()}/test/fixtures"
 
 
 def test_loads_page_and_navigates_back_and_forth(qtbot):
@@ -87,7 +87,7 @@ def test_query_search_engine_from_searchbar(qtbot):
 
     browser.enter_address_and_hit_return("passion fruit green tea")
 
-    browser.address_bar_contains("?q=passion+fruit+green+tea")
+    browser.address_bar_contains("?q=passion fruit green tea")
 
 
 def test_query_search_engine_from_selection(qtbot):

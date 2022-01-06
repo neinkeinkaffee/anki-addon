@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget
 
 from src.add_dialog import AddDialog
-from test.add_dialog.add_dialog_driver import AddDialogDriver
+from test.drivers.add_dialog_driver import AddDialogDriver
 
 
 class MockNote:

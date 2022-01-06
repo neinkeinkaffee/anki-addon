@@ -1,12 +1,11 @@
 import re
 import sys
 
-from PyQt5.QtCore import QUrl, Qt, pyqtSignal
+from PyQt5.QtCore import QUrl, pyqtSignal
 from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from PyQt5.QtWidgets import (QApplication, QLineEdit, QPushButton, QToolBar, QTabWidget, QShortcut,
-                             QWidget, QVBoxLayout, QMenu)
-
+                             QWidget, QVBoxLayout)
 
 BACK_ARROW_URI = ":/qt-project.org/styles/commonstyle/images/left-32.png"
 FORWARD_ARROW_URI = ":/qt-project.org/styles/commonstyle/images/right-32.png"
@@ -96,7 +95,8 @@ class Browser(QWidget):
         if re.match(URL_REGEX, address_bar_input):
             url = QUrl.fromUserInput(address_bar_input)
         else:
-            url = QUrl("https://duckduckgo.com?q=" + address_bar_input)
+            url = QUrl("https://duckduckgo.com")
+            url.setQuery("q=" + address_bar_input)
         self.tabs.currentWidget().setUrl(url)
 
     def back(self):

@@ -3,11 +3,11 @@ import os
 from aqt.main import AnkiQt
 from pytest_anki import AnkiSession
 
-from test.add_dialog.add_dialog_driver import AddDialogDriver
-from test.browser.browser_driver import BrowserDriver
+from test.drivers.add_dialog_driver import AddDialogDriver
+from test.drivers.browser_driver import BrowserDriver
 
 
-FIXTURES_PATH = f"file://{os.getcwd()}/test/addon/fixtures"
+FIXTURES_PATH = f"file://{os.getcwd()}/test/fixtures"
 
 
 def test_copy_text_to_back(anki_session: AnkiSession, qtbot, monkeypatch):

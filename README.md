@@ -4,9 +4,8 @@
 To run the tests, install `pytest-anki`.
 ```
 pip install pytest-anki
-pytest test/addon
-pytest test/add_dialog
-pytest test/browser
+pytest test/pyqt_integration
+for f in $(ls test/anki_integration/test_*); do pytest $f; done
 ```
 
 ### Installing the addon

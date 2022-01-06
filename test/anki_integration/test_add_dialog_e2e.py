@@ -3,7 +3,7 @@ from aqt.main import AnkiQt
 from src.add_dialog import AddDialog
 from src.collection import Collection
 from src.editor import Editor
-from test.add_dialog.add_dialog_driver import AddDialogDriver
+from test.drivers.add_dialog_driver import AddDialogDriver
 
 
 def test_can_add_note(anki_session, qtbot, monkeypatch):
