@@ -1,6 +1,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QDialogButtonBox, QVBoxLayout
-from aqt import tr
+
+SAVE_NOTE_TEXT = "Add"
 
 
 class AddDialog(QWidget):
@@ -17,7 +18,7 @@ class AddDialog(QWidget):
 
         self.button_box = QDialogButtonBox(self)
         self.button_box.setOrientation(Qt.Horizontal)
-        self.add_button = self.button_box.addButton(tr.actions_add(), QDialogButtonBox.ActionRole)
+        self.add_button = self.button_box.addButton(SAVE_NOTE_TEXT, QDialogButtonBox.ActionRole)
         self.add_button.clicked.connect(self.add_current_note)
         self.vbox.addWidget(self.button_box)
 

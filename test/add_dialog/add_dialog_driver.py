@@ -4,6 +4,7 @@ class AddDialogDriver:
     def __init__(self, add_dialog, qtbot):
         self._qtbot = qtbot
         self._add_dialog = add_dialog
+        self._qtbot.addWidget(self._add_dialog)
 
     def enter_new_note(self, front, back):
         note = self._add_dialog.collection.new_note()
