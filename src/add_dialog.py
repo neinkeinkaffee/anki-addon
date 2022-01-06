@@ -1,8 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QDialogButtonBox, QVBoxLayout
-from anki.decks import DeckId
 from aqt import tr
-from aqt.operations.note import add_note
 
 
 class AddDialog(QWidget):
@@ -38,7 +36,5 @@ class AddDialog(QWidget):
 
     def add_current_note(self):
         note = self.editor.note()
-        if note.fields[0] and note.fields[1]:
-            deck_id = DeckId(0)
-            add_note(parent=None, note=note, target_deck_id=deck_id).run_in_background()
-            self.set_new_note()
+        self.collection.save_note(note)
+        self.set_new_note()

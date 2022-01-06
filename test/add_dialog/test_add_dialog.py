@@ -10,7 +10,7 @@ def test_can_add_note(anki_session, qtbot, monkeypatch):
     prevent_import_window_from_opening(monkeypatch)
 
     with anki_session.profile_loaded():
-        add_dialog = AddDialogDriver(AddDialog(Collection(anki_session._mw), Editor(anki_session._mw)), qtbot, anki_session._mw)
+        add_dialog = AddDialogDriver(AddDialog(Collection(anki_session._mw), Editor(anki_session._mw)), qtbot)
         addon = anki_session.load_addon(package_name="src")
 
         addon.open_window_action.trigger()

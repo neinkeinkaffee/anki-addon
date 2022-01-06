@@ -1,10 +1,8 @@
 from PyQt5.QtCore import Qt
 
-
 class AddDialogDriver:
-    def __init__(self, add_dialog, qtbot, mw):
+    def __init__(self, add_dialog, qtbot):
         self._qtbot = qtbot
-        self._mw = mw
         self._add_dialog = add_dialog
 
     def enter_new_note(self, front, back):
