@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+anki_test() {
+  for f in test/anki_integration/test_*; do pytest $f; done
+}
+
+pyqt_test() {
+  pytest test/pyqt_integration
+}
+
+CMD=${1:-}
+shift || true
+case ${CMD} in
+anki) anki_test ;;
+pyqt) pyqt_test ;;
+*) help ;;
+esac
