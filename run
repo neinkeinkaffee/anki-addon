@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
 anki_test() {
+  echo "Running Anki integration tests"
   for f in test/anki_integration/test_*; do pytest $f; done
 }
 
 pyqt_test() {
+  echo "Running PyQt integration tests"
   pytest test/pyqt_integration
 }
 
@@ -13,5 +15,5 @@ shift || true
 case ${CMD} in
 anki) anki_test ;;
 pyqt) pyqt_test ;;
-*) help ;;
+*) echo "Usage: ./run [anki|pyqt]"
 esac
