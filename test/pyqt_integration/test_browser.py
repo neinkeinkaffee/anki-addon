@@ -3,7 +3,6 @@ import os
 from src.browser import Browser
 from test.drivers.browser_driver import BrowserDriver
 
-
 FIXTURES_PATH = f"file://{os.getcwd()}/test/fixtures"
 
 
