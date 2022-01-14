@@ -30,11 +30,14 @@ class Tab(QWebEngineView):
     def contextMenuEvent(self, event):
         menu = self.page().createStandardContextMenu()
         if self._link_was_clicked():
-            open_new_tab_action = menu.actions()[0]
-            open_new_tab_action.triggered.connect(self._emit_open_tab_signal)
-            open_new_window_action = menu.actions()[1]
-            open_new_window_action.setVisible(False)
+            self._overwrite_options(menu)
         menu.exec_(event.globalPos())
+
+    def _overwrite_options(self, menu):
+        open_new_tab_action = menu.actions()[0]
+        open_new_tab_action.triggered.connect(self._emit_open_tab_signal)
+        open_new_window_action = menu.actions()[1]
+        open_new_window_action.setVisible(False)
 
     def _link_was_clicked(self):
         return not self.page().contextMenuData().linkUrl().isEmpty()
